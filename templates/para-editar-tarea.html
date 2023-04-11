@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:http="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>App Gestor de Tareas</title>
+
+    <!--Bootstrap con plantilla -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/materia/bootstrap.min.css" integrity="sha384-B4morbeopVCSpzeC1c4nyV0d0cqvlSAfyXVfrPJa25im5p+yEN/YmhlgQP/OyMZD" crossorigin="anonymous">
+    <!--Fuente de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro&family=Open+Sans&display=swap" rel="stylesheet">
+
+    <!--Hoja de estilo propia (main.css  se vincula el main.css con el index.html-->
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+
+    <!-- Font Awesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+<body>
+    <main class="container p-4">
+        <h4 class="display-4 text-center mt-4 titulo" >App Gestor de Tareas</h4>
+        <div class="row">
+            <div class="col-md-3 offset-md-3 my-auto" > <!--Este div ocupará 4 columnas del espacio (centrado) se encarga de que sea responsive-->
+                <div class="card"  style="width:33rem;"> <!--Creacion del objeto card-->
+                    <div class="card-header">
+                        <form action="/modificar-tarea/{{tarea.id}}" method="post">
+                            <div class="form-group"> <!--Esto recomienda Bootstrap incluir en la clase form-group  todos los formularios-->
+                                <input type="text" name="contenido_tarea_edicion" placeholder="Editar Tarea"  class="form-control" autofocus>
+                                    <div>
+                                        <select class="form-select" name="categoria_tarea_edicion" style="width:140px; height:40px;">
+                                            <option selected>Seleccione Categoria</option>
+                                            <option value="Personales" >Personales</option>
+                                            <option value="Trabajo" >Trabajo</option>
+                                            <option value="Estudio" >Estudio</option>
+                                            <option value="Otros" >Otros</option>
+                                        </select>
+                                        <input type="date" name="fecha_limite_tarea_edicion" style="width:120px; height:40px;" min="2022-06-23" max="2099-06-23">
+                                    </div>
+                            </div>
+                            <p></p>
+                            <div>
+                            <!--Submit significa que al hacer click el boton nos llevara a otra ubicacion o pagina -->
+                                <button type="submit"  class="btn btn-primary btn-block">
+                                    Guardar
+                                </button> <!--btn-block hace que el boton ocupe el ancho-->
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group"><!-- Gracias a Jinja se puede introducir codigo Python en nuestro HTML
+                             y Python se encarga de ejecutarlo e interpretarlo -->
+                            <li class="list-group-item">
+                                {{tarea.contenido}} > {{ tarea.fecha_limite_editada }}  ({{tarea.categoria}})<!-- contenido es la variable de la clase Tarea
+                            que almacena el texto de la tarea -->
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+     <footer align=center>
+        APP Gestor de Tareas - Leandro Amendolara - Tokio School - 30/06/2022
+    </footer>
+</body>
+</html>
+

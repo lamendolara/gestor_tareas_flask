@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:http="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>App Gestor de Tareas</title>
+
+    <!--Bootstrap con plantilla -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/materia/bootstrap.min.css" integrity="sha384-B4morbeopVCSpzeC1c4nyV0d0cqvlSAfyXVfrPJa25im5p+yEN/YmhlgQP/OyMZD" crossorigin="anonymous">
+    <!--Fuente de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro&family=Open+Sans&display=swap" rel="stylesheet">
+
+    <!--Hoja de estilo propia (main.css  se vincula el main.css con el index.html-->
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+
+    <!-- Font Awesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+<body>
+    <main class="container p-3">
+        <h5 class="display-4 text-center mt-4 titulo" align="center">App Gestor de Tareas</h5>
+        <div class="row">
+            <div class="col-md-3 offset-md-3 my-auto" > <!--Este div ocupará 4 columnas del espacio (centrado) se encarga de que sea responsive-->
+                <div class="card"  style="width:33rem;"> <!--Creacion del objeto card-->
+                    <div class="card-header">
+                        <form action="/crear-tarea" method="post">
+                            <div class="form-group"> <!--Esto recomienda Bootstrap incluir en la clase form-group  todos los formularios-->
+                                <input type="text" name="contenido_tarea" placeholder="Tarea" class="form-control" autofocus>
+                                <p></p>
+                                    <div>
+                                        <select class="form-select"  name="categoria_tarea" style="width:140px; height:40px;">
+                                            <option selected>Seleccione Categoria</option>
+                                            <option value="Personales">Personales</option>
+                                            <option value="Trabajo">Trabajo</option>
+                                            <option value="Estudio">Estudio</option>
+                                            <option value="Otros">Otros</option>
+                                        </select>
+                                        <input type="date" name="fecha_limite_tarea" style="width:120px; height:40px;" min="2022-06-23" max="2099-06-23">
+                                    </div>
+                            </div>
+                            <p></p>
+                            <div>
+                            <!--Submit significa que al hacer click el boton nos llevara a otra ubicacion o pagina -->
+                                <button type="submit" class="btn btn-primary btn-block"> <!--btn-block hace que el boton ocupe el ancho-->
+                                    Guardar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <!-- Las etiquetas <ul> y <li> sirven para crear listas en HTML -->
+                        <form action="/filtro-categoria" method="post">
+                            <div class="form-group"> <!--Esto recomienda Bootstrap incluir en la clase form-group  todos los formularios-->
+                                <select class="form-select" name="filtro_categoria_tarea"  style="width:140px; height:40px;">
+                                    <option selected>Seleccione Categoria</option>
+                                    <option value="Personales">Personales</option>
+                                    <option value="Trabajo">Trabajo</option>
+                                    <option value="Estudio">Estudio</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                                <!--Submit significa que al hacer click el boton nos llevara a otra ubicacion o pagina -->
+                                <button type="submit" class="btn btn-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" style="width:1em; height:1em;" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
+                                        <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </form>
+                        <ul class="list-group">
+                            <!-- Gracias a Jinja se puede introducir codigo Python en nuestro HTML
+                             y Python se encarga de ejecutarlo e interpretarlo -->
+                            {% for tarea in lista_de_tareas %}
+                            <li class="list-group-item">
+                                <span class="{% if tarea.hecha==true %} tarea_hecha {% endif %}">
+                                    {{tarea.contenido}} > {{ tarea.fecha_limite_editada }}  ({{tarea.categoria}})  <!-- contenido es la variable de la clase Tarea
+                            que almacena el texto de la tarea, en fecha limite le damos formato con Jinja2 con el metodo strftime.-->
+                                </span>
+                                &nbsp
+                                <a href="/tarea-hecha/{{tarea.id}}" style="text-decoration:none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="green" class="bi bi-check2-square" viewBox="0 0 16 16">
+                                        <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/>
+                                        <path d="M8.354 10.354l7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
+                                    </svg>
+                                </a>
+                                &nbsp
+                                <a href="/eliminar-tarea/{{tarea.id}}" style="text-decoration:none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="red" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/>
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                    </svg>
+                                </a>
+                                &nbsp
+                                <a href="/editar-tarea/{{tarea.id}}" style="text-decoration:none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                    </svg>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer align=center>
+        APP Gestor de Tareas - Leandro Amendolara - Tokio School - 30/06/2022
+    </footer>
+</body>
+</html>
+
+
+
+
+
+
